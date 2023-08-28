@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetServerSidePropsContext, NextPage } from "next";
 import Main from "@/components/Main";
 import Layout from "@/components/Layout";
 import PageContent from "@/components/Layout/PageContent";
@@ -26,8 +26,9 @@ import useCommunityData from "@/hooks/useCommunityData";
 import Recommendations from "@/components/Community/Recommendations";
 import PrasanthM from "@/components/Community/PrasanthM";
 import PersonalHome from "@/components/Community/PersonalHome";
+import safeJsonStringify from "safe-json-stringify";
 
-const Home: NextPage = () => {
+const Home: NextPage<any> = ({ postsFromServer }) => {
   const [user, loadingUser] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
   const {
@@ -67,19 +68,9 @@ const Home: NextPage = () => {
   const buildNoUserHomeFeed = async () => {
     setLoading(true);
     try {
-      const postQuery = query(
-        collection(firestore, "posts"),
-        orderBy("voteStatus", "desc"),
-        limit(10)
-      );
-      const postDocs = await getDocs(postQuery);
-      const posts = postDocs.docs.map((post) => ({
-        id: post.id,
-        ...post.data(),
-      }));
       setPostStateValue((prev) => ({
         ...prev,
-        posts: posts as Post[],
+        posts: postsFromServer.posts as Post[],
       }));
     } catch (error) {
       console.log("buildUserHomeFeed", error);
@@ -129,22 +120,23 @@ const Home: NextPage = () => {
           <PostLoader />
         ) : (
           <Stack>
-            {postStateValue.posts.map((post) => (
-              <PostItem
-                key={post.id}
-                onDeletePost={onDeletePost}
-                post={post}
-                onVote={onVote}
-                onSelectPost={onSelectPost}
-                userVoteValue={
-                  postStateValue.postVotes.find(
-                    (vote) => vote.postId === post.id
-                  )?.voteValue
-                }
-                userIsCreator={user?.uid === post.creatorId}
-                homePage
-              />
-            ))}
+            {postStateValue.posts &&
+              postStateValue.posts.map((post) => (
+                <PostItem
+                  key={post.id}
+                  onDeletePost={onDeletePost}
+                  post={post}
+                  onVote={onVote}
+                  onSelectPost={onSelectPost}
+                  userVoteValue={
+                    postStateValue.postVotes.find(
+                      (vote) => vote.postId === post.id
+                    )?.voteValue
+                  }
+                  userIsCreator={user?.uid === post.creatorId}
+                  homePage
+                />
+              ))}
           </Stack>
         )}
       </>
@@ -159,4 +151,25 @@ const Home: NextPage = () => {
   );
 };
 
+export async function getStaticProps() {
+  try {
+    const postQuery = query(
+      collection(firestore, "posts"),
+      orderBy("voteStatus", "desc"),
+      limit(10)
+    );
+    const postDocs = await getDocs(postQuery);
+    const posts = postDocs.docs.map((post) => ({
+      id: post.id,
+      ...post.data(),
+    }));
+    return {
+      props: {
+        postsFromServer: JSON.parse(safeJsonStringify({ posts })),
+      },
+    };
+  } catch (error) {
+    console.log("buildUserHomeFeed", error);
+  }
+}
 export default Home;
