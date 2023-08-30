@@ -4,11 +4,11 @@ import {
   Icon,
   Stack,
   Text,
-  Image,
   Skeleton,
   Spinner,
   Alert,
   AlertIcon,
+  Box,
 } from "@chakra-ui/react";
 import moment from "moment";
 import Link from "next/link";
@@ -16,8 +16,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsChat, BsDot } from "react-icons/bs";
-
-import {} from "react-icons/fa";
+import Image from "next/image";
 
 import {
   IoArrowDownCircleOutline,
@@ -129,12 +128,24 @@ const PostItem: React.FC<PostItemProps> = ({
                 {post.communityImageURL ? (
                   <Image
                     src={post.communityImageURL}
-                    borderRadius="full"
-                    mr={1}
-                    height="25px"
+                    height={25}
+                    width={25}
+                    alt={post.communityId}
+                    style={{
+                      borderRadius: "50%",
+                      marginRight: ".5em",
+                      height: 25,
+                      width: 25,
+                    }}
                   />
                 ) : (
-                  <Image src="/img/parrot_mono.svg" height="25px" mr={1} />
+                  <Image
+                    src="/img/parrot_mono.svg"
+                    height={25}
+                    width={25}
+                    alt={post.communityId}
+                    style={{ marginRight: ".5em" }}
+                  />
                 )}
                 <Link href={`/${post.communityId}`}>
                   <Text
@@ -160,13 +171,16 @@ const PostItem: React.FC<PostItemProps> = ({
           {post.imageURL && (
             <Flex justify="center" align="center" p={2}>
               {loadingImage && <Skeleton h="200px" w="100%" borderRadius={4} />}
-              <Image
-                src={post.imageURL}
-                maxHeight="460px"
-                alt="Post Image"
-                onLoad={() => setLoadingImage(false)}
-                display={loadingImage ? "none" : "unset"}
-              />
+              <Flex maxHeight="460px">
+                <Image
+                  src={post.imageURL}
+                  alt="Post Image"
+                  onLoad={() => setLoadingImage(false)}
+                  height={400}
+                  width={460}
+                  placeholder="empty"
+                />
+              </Flex>
             </Flex>
           )}
         </Stack>

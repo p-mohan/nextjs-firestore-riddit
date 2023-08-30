@@ -7,10 +7,8 @@ import {
   SkeletonCircle,
   Stack,
   Text,
-  Image,
   Button,
   Box,
-  Icon,
 } from "@chakra-ui/react";
 import {
   collection,
@@ -22,6 +20,8 @@ import {
 } from "firebase/firestore";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
+
 const Recommendations = () => {
   const [communities, setCommunities] = useState<Community[]>([]);
   const [loading, setLoading] = useState(false);
@@ -109,15 +109,28 @@ const Recommendations = () => {
                         {item.imageURL ? (
                           <Image
                             src={item.imageURL}
-                            borderRadius="full"
-                            boxSize="28px"
-                            mr={2}
+                            height={28}
+                            width={28}
+                            alt={item.id}
+                            style={{
+                              borderRadius: "50%",
+                              marginRight: "2px",
+                              height: 28,
+                              width: 28,
+                            }}
                           />
                         ) : (
                           <Image
                             src="/img/parrot_mono.svg"
-                            height="25px"
-                            mr={2}
+                            height={25}
+                            width={25}
+                            alt={item.id}
+                            style={{
+                              borderRadius: "50%",
+                              marginRight: "2px",
+                              height: 25,
+                              width: 25,
+                            }}
                           />
                         )}
                         <span
