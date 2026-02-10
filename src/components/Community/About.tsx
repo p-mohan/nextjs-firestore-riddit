@@ -111,7 +111,7 @@ const About: React.FC<AboutProps> = ({ communityData }) => {
           {user?.uid === communityData.creatorId && (
             <>
               <Separator />
-              <Stack spacing={1} fontSize="10pt">
+              <Stack gap={1} fontSize="10pt">
                 <Text fontWeight={600}>Admin</Text>
                 <Flex align="center" justify="space-between">
                   <Text
