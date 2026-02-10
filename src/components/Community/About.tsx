@@ -4,7 +4,7 @@ import useSelectFile from "@/hooks/useSelectFile";
 import {
   Box,
   Button,
-  Divider,
+  Separator,
   Flex,
   Icon,
   Stack,
@@ -85,7 +85,7 @@ const About: React.FC<AboutProps> = ({ communityData }) => {
             <Text>{communityData.numberOfMembers?.toLocaleString()}</Text>
             <Text>Members</Text>
           </Flex>
-          <Divider />
+          <Separator />
           <Flex
             align="center"
             width="100%"
@@ -110,7 +110,7 @@ const About: React.FC<AboutProps> = ({ communityData }) => {
           </Link>
           {user?.uid === communityData.creatorId && (
             <>
-              <Divider />
+              <Separator />
               <Stack spacing={1} fontSize="10pt">
                 <Text fontWeight={600}>Admin</Text>
                 <Flex align="center" justify="space-between">
