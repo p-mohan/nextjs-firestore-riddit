@@ -31,6 +31,6 @@
     "typescript": "5.9.3"
   },
   "devDependencies": {
-    "@types/safe-json-stringify": "^1.1.2"
+    "@types/safe-json-stringify": "^1.1.5"
   }
 }
